@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://datadivehomes.com
+
+# Sitemaps
+Sitemap: https://datadivehomes.com/sitemap.xml

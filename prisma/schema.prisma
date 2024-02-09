@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [postgis(schema: "public")]
+}
+
+model User {
+  id        String         @id(map: "id") @default(uuid())
+  email     String         @unique(map: "email")
+  password  String
+  company   String
+  createdAt DateTime       @default(now()) @map("created_at")
+  firstName String?        @map("first_name")
+  lastName  String?        @map("last_name")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  role      Role           @default(USER)
+  settings  User_Settings?
+
+  @@map("user")
+}
+
+model User_Settings {
+  id                 String   @id(map: "settings_id") @default(uuid())
+  UserId             String   @unique @map("user_id")
+  ResetPasswordToken String?  @map("reset_password_token")
+  // StrategyParameters Json?   @default("{\"listprice-avm\": 30, \"subjecttoequity\": 10, \"seller-finance-equity\": 90, \"last-purchase-date-subject-to\": 3, \"last-purchase-date-seller-finance\": 10}") @map("strategy_parameters")
+  user               User     @relation(fields: [UserId], references: [id])
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  @@map("user_settings")
+}
+
+enum Role {
+  USER
+  ADMIN
+  INVALID
+  EXPIRED
+}
