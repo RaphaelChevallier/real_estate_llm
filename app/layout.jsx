@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import AuthContext from "./authContext";
 import "./globals.css";
+import Providers from './providers';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,9 +14,11 @@ export default function RootLayout(
  {children, session}
 ) {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-[#251E1E] min-h-screen">
       <AuthContext session={session}>
-        <body className={inter.className}>{children}</body>
+        <Providers>
+          <body className='min-h-screen'>{children}</body>
+        </Providers>
       </AuthContext>
     </html>
   );

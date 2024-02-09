@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import Footer from "../components/Footer";
 
@@ -18,15 +19,16 @@ export default function Home() {
             aria-label="Global"
           >
             <div className="flex lg:flex-1">
-              {/* <a href="#" className="-m-1.5 p-1.5">
+              <Link href="/" className="-m-1.5 p-1.5">
                 <span className="sr-only">Data Dive Homes</span>
                 <Image
                   src="/aiOrb.png"
-                  width={60}
-                  height={60}
+                  className="hover:scale-110"
+                  width={50}
+                  height={50}
                   alt="Logo Image"
                 />
-              </a> */}
+              </Link>
             </div>
             <div className="hidden lg:flex lg:gap-x-12">
               {navigation.map((item) => (
@@ -40,12 +42,12 @@ export default function Home() {
               ))}
             </div>
             <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-              <a
-                href="/login"
+              <Link
+                href="/auth/login"
                 className="text-sm font-semibold leading-6 text-gray-200 hover:scale-110"
               >
-                Log in <span aria-hidden="true">&rarr;</span>
-              </a>
+                Log In <span aria-hidden="true">&rarr;</span>
+              </Link>
             </div>
           </nav>
         </div>
@@ -69,18 +71,18 @@ export default function Home() {
                 fugiat veniam occaecat fugiat aliqua.
               </p> */}
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                <a
-                  href="/signup"
+                <Link
+                  href="/auth/signup"
                   className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-gray-200 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 hover:scale-110"
                 >
                   Get started
-                </a>
-                <a
-                  href="/login"
+                </Link>
+                <Link
+                  href="/auth/login"
                   className="text-sm font-semibold leading-6 text-gray-200 hover:scale-110"
                 >
                   Log In <span aria-hidden="true">→</span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>

@@ -26,7 +26,7 @@ const Footer = () => {
           </p>
         </div>
         <div className="flex justify-center text-gray">
-          <CgCopyright />
+          <CgCopyright color="#000000" />
           <p className="text-gray-500 text-[12px]">
             Copyright {year} - DATA DIVE HOMES | Created by Raphael Chevallier
           </p>
