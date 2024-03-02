@@ -11,7 +11,7 @@ export default function AuthContext(
   { session }: { session: any }
 ) {
   return (
-    <SessionProvider refetchInterval={60 * 5} session={session}>
+    <SessionProvider refetchInterval={3 * 60 * 60} session={session}>
       {children}
     </SessionProvider>
   );

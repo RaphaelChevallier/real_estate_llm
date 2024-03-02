@@ -7,6 +7,7 @@ import { prisma } from "../../../../lib/prisma";
 export const authOptions = {
   session: {
     strategy: "jwt",
+    maxAge: 4 * 60 * 60
   },
   pages: {
     signIn: "/auth/login",

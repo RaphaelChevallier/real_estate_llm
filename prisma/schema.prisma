@@ -39,6 +39,24 @@ model User_Settings {
   @@map("user_settings")
 }
 
+model UserMessage {
+  id        String   @id(map: "message_id") @default(uuid())
+  UserId    String   @unique @map("user_id")
+  userQuery String?  @map("user_query")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("user_message")
+}
+
+model AiMessage {
+  id        String   @id(map: "ai_message_id") @default(uuid())
+  UserId    String   @unique @map("user_id")
+  answer    String?  @map("answer")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("ai_message")
+}
+
 enum Role {
   USER
   ADMIN
