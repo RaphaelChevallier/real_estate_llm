@@ -9,7 +9,7 @@ import {
   Skeleton,
   Textarea,
 } from "@nextui-org/react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -17,6 +17,7 @@ import { IoSend } from "react-icons/io5";
 import { Socket, io } from "socket.io-client";
 
 export default function ChatRoom() {
+  const { data: session, status, update } = useSession();
   const socketRef = useRef<Socket | null>(null);
   const textareaRef = useRef(null);
   const [loading, setLoading] = useState(true);
@@ -33,6 +34,31 @@ export default function ChatRoom() {
   }, [allMessages.length]);
 
   useEffect(() => {
+    async function getMessages() {
+      console.log("here");
+      const res = await fetch("/api/messages/getAllMessages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: session?.user?.email,
+        }),
+      });
+
+      const allMessages = await res.json();
+      const mapMessages = allMessages.data.map((obj: any) => {
+        return new Map(Object.entries(obj));
+      });
+      setAllMessages(mapMessages);
+      setLoading(false);
+    }
+    if (status != "loading" && session != null && allMessages.length == 0) {
+      getMessages();
+    }
+  }, [session, status, allMessages.length]);
+
+  useEffect(() => {
     const socket = io("localhost:5001/", {
       transports: ["websocket"],
     });
@@ -40,8 +66,6 @@ export default function ChatRoom() {
     socketRef.current = socket;
 
     socket.on("connect", () => {});
-
-    setLoading(false);
 
     socket.on("disconnect", () => {});
 
@@ -62,20 +86,52 @@ export default function ChatRoom() {
       let chatMap = new Map<string, string>();
       chatMap.set("from", "ai");
       chatMap.set("message", data);
-      setAllMessages([...allMessages, chatMap]);
+      fetch("/api/messages/saveAiMessage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: data,
+        }),
+      });
+      setAllMessages((allMessages) => [...allMessages, chatMap]);
       setAiThinking(false);
     });
-  }, [socketRef, allMessages]);
+  }, [socketRef]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!userMessage) {
       return;
     }
     setAiThinking(true);
-    socketRef.current?.emit("data", userMessage);
+    const resInfo = await fetch("/api/getUserInfo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: session?.user?.email,
+      }),
+    });
+    const data = await resInfo.json();
+    socketRef.current?.emit("data", {
+      userMessage: userMessage,
+      userId: data.id,
+    });
     let chatMap = new Map<string, string>();
     chatMap.set("from", "user");
     chatMap.set("message", userMessage);
+    fetch("/api/messages/saveUserMessage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: session?.user?.email,
+        message: userMessage,
+      }),
+    });
     setAllMessages([...allMessages, chatMap]);
     setUserMessage("");
   };
@@ -133,9 +189,15 @@ export default function ChatRoom() {
           <CardBody id="message_body" className="overflow-auto scroll-smooth">
             <div className="h-full overflow-hidden py-4">
               <div className="h-full overflow-y-auto">
-                {allMessages.length == 0 ? (
+                {allMessages.length == 0 && loading == false ? (
                   <div className="flex justify-center items-center text-violet-700 font-bold text-lg">
-                    Write your first query and explore the world of real estate!
+                    Ai is ready to help! Write your first query and explore the
+                    world of real estate!
+                  </div>
+                ) : null}
+                {allMessages.length == 0 && loading == true ? (
+                  <div className="flex justify-center items-center text-violet-700 font-bold text-lg">
+                    We&apos;re waking up our ai! Give us a second!
                   </div>
                 ) : null}
                 <div className="grid grid-cols-12 gap-y-2">
@@ -216,7 +278,7 @@ export default function ChatRoom() {
           <CardFooter className="border-1 py-1 before:rounded-xl absolute bottom-5 p-2 border border-black text-black rounded-large w-[60%] shadow-small overflow-hidden ml-1 z-10">
             <Textarea
               variant="bordered"
-              isDisabled={aiThinking}
+              isDisabled={aiThinking || loading}
               ref={textareaRef}
               onKeyDown={handleKeyDown}
               value={userMessage}
@@ -233,7 +295,7 @@ export default function ChatRoom() {
                   ) : (
                     <Button
                       role="button"
-                      isDisabled={aiThinking}
+                      isDisabled={aiThinking || loading}
                       onPress={handleSubmit}
                       onSubmit={handleSubmit}
                       isIconOnly

@@ -34,8 +34,11 @@ export default function Login() {
         router.push("/chat");
       } else if (response?.status === 401) {
         if (response.error) {
+          console.log(response);
           setError(1);
-          setErrorMessage(response?.error);
+          setErrorMessage(
+            "These credentials are not recognized. Please try again."
+          );
           setEmail("");
           setPassword("");
         }

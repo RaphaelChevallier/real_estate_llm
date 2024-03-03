@@ -57,6 +57,7 @@ export default function Signup() {
         setConfirmPasswordError(false);
         setError(data.status);
       } else if (data.status === 500) {
+        console.log(data);
         setEmail("");
         setFirstName("");
         setLastName("");

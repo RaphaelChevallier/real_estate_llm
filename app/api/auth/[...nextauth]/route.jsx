@@ -35,6 +35,7 @@ export const authOptions = {
           },
           include: { settings: true },
         });
+        console.log(user)
 
         if (!user) {
           throw new Error("This email does not seem to be in our system.");
