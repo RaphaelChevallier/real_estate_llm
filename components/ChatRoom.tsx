@@ -136,6 +136,22 @@ export default function ChatRoom() {
     setUserMessage("");
   };
 
+  function formatTextWithTailwind(text: string | undefined) {
+    if (text) {
+      const formattedText = text
+        .replace(
+          /\*\*(.*?)\*\*/g,
+          '<header class="text-xl font-bold">$1</header><p>'
+        )
+        .replace(/\*(.*?)\*/g, '<p class="font-semibold">$1</p>')
+        .replace(/^(?=[^\s])/gm, "<p>") // Wrap remaining paragraphs
+        .trim(); // Tidy up extra whitespace
+
+      // Function now returns JSX using dangerouslySetInnerHTML
+      return <div dangerouslySetInnerHTML={{ __html: formattedText }} />;
+    }
+  }
+
   const navigation = [
     // { name: "Pricing", href: "/pricing" },
     { name: "Contact Us", href: "/contactUs" },
@@ -231,7 +247,10 @@ export default function ChatRoom() {
                             />
                           </div>
                           <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                            <div>{item.get("message")}</div>
+                            {item.get("message") != null ||
+                            item.get("message") != undefined
+                              ? formatTextWithTailwind(item.get("message"))
+                              : null}
                           </div>
                         </div>
                       </div>
