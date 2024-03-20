@@ -9,15 +9,38 @@ import {
   Skeleton,
   Textarea,
 } from "@nextui-org/react";
+import { DefaultSession } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { Socket, io } from "socket.io-client";
 
-export default function ChatRoom() {
-  const { data: session, status, update } = useSession();
+declare module "next-auth" {
+  interface User {
+    firstName?: string | null;
+    lastName?: string | null;
+    freeTrial?: boolean | null;
+  }
+
+  interface Session extends DefaultSession {
+    user?: User;
+  }
+}
+export default function ChatRoom(props: any) {
+  const router = useRouter();
+  const {
+    data: session,
+    status,
+    update,
+  } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/login");
+    },
+  });
   const socketRef = useRef<Socket | null>(null);
   const textareaRef = useRef(null);
   const [loading, setLoading] = useState(true);
@@ -35,7 +58,6 @@ export default function ChatRoom() {
 
   useEffect(() => {
     async function getMessages() {
-      console.log("here");
       const res = await fetch("/api/messages/getAllMessages", {
         method: "POST",
         headers: {
@@ -154,6 +176,16 @@ export default function ChatRoom() {
 
   const navigation = [
     // { name: "Pricing", href: "/pricing" },
+    {
+      name:
+        session && status == "authenticated"
+          ? session.user?.firstName + " " + session.user?.lastName
+          : "Loading profile...",
+      href:
+        session && status == "authenticated"
+          ? "/profile/" + session.user?.firstName + session.user?.lastName
+          : "",
+    },
     { name: "Contact Us", href: "/contactUs" },
     // { name: "Product", href: "/about" },
     // { name: 'About Us', href: '#' },
@@ -189,7 +221,7 @@ export default function ChatRoom() {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <Link
               onClick={() => signOut()}
-              href="/"
+              href="/auth/login"
               className="text-sm font-semibold leading-6 text-gray-200 hover:scale-110"
             >
               Sign Out <span aria-hidden="true">&rarr;</span>
@@ -206,9 +238,29 @@ export default function ChatRoom() {
             <div className="h-full overflow-hidden py-4">
               <div className="h-full overflow-y-auto">
                 {allMessages.length == 0 && loading == false ? (
-                  <div className="flex justify-center items-center text-violet-700 font-bold text-lg">
-                    Ai is ready to help! Write your first query and explore the
-                    world of real estate!
+                  <div className="grid grid-cols-12 gap-y-2">
+                    <div
+                      key={"first_intro_message"}
+                      className="col-start-6 col-end-13 p-3 rounded-lg"
+                    >
+                      <div className="flex items-center justify-start flex-row-reverse">
+                        <div className="flex items-center justify-center h-10 w-10 rounded-full bg-black flex-shrink-0">
+                          <Image
+                            src="/aiOrb.gif"
+                            width={35}
+                            height={35}
+                            alt="Logo Image"
+                          />
+                        </div>
+                        <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
+                          <span className="font-bold">Welcome!</span> I&apos;m
+                          EstateMate. I&apos;m an expert in real estate and have
+                          access to a vast private database of useful
+                          information. Let me know how I can help by typing your
+                          first message in the chat window below!
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ) : null}
                 {allMessages.length == 0 && loading == true ? (

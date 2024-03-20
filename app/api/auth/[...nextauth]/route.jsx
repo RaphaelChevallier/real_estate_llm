@@ -35,7 +35,7 @@ export const authOptions = {
           },
           include: { settings: true },
         });
-        console.log(user)
+        let freeTrial = false
 
         if (!user) {
           throw new Error("This email does not seem to be in our system.");
@@ -52,11 +52,17 @@ export const authOptions = {
           );
         }
 
+        if(new Date() - user.createdAt < 604800000){
+          freeTrial = true
+        }
+
+
         return {
           id: user.id + "",
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          freeTrial: freeTrial
         };
       },
     }),

@@ -13,16 +13,19 @@ datasource db {
 }
 
 model User {
-  id        String         @id(map: "id") @default(uuid())
-  email     String         @unique(map: "email")
-  password  String
-  company   String
-  createdAt DateTime       @default(now()) @map("created_at")
-  firstName String?        @map("first_name")
-  lastName  String?        @map("last_name")
-  updatedAt DateTime       @updatedAt @map("updated_at")
-  role      Role           @default(USER)
-  settings  User_Settings?
+  id              String         @id(map: "id") @default(uuid())
+  email           String         @unique(map: "email")
+  password        String
+  company         String
+  createdAt       DateTime       @default(now()) @map("created_at")
+  firstName       String?        @map("first_name")
+  lastName        String?        @map("last_name")
+  stripeId        String?        @unique @map("stripe_id")
+  isSubscribed    Boolean?       @default(false) @map("is_subscribed")
+  availableStates String[]       @default([]) @map("available_states")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  role            Role           @default(USER)
+  settings        User_Settings?
 
   @@map("user")
 }

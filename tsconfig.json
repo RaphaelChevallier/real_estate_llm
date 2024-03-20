@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/auth/[...nextauth]/route.jsx", "app/layout.jsx", "components/Contact.jsx", "app/actions/contactActions.jsx", "app/contactUs/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/auth/[...nextauth]/route.jsx", "app/layout.jsx", "components/Contact.jsx", "app/actions/contactActions.jsx", "app/contactUs/page.jsx", "components/RememberPassword.jsx", "components/RememberPassword.jsx", "components/FormAction.jsx", "app/auth/forgot-password/[token]/[email]/page.jsx"],
   "exclude": ["node_modules"]
 }
