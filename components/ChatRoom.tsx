@@ -77,7 +77,7 @@ export default function ChatRoom(props: any) {
     if (
       event.key === "Enter" &&
       !event.shiftKey &&
-      (!aiThinking || !loading || !(tokenCount > 200))
+      (!aiThinking || !loading || !(tokenCount > 150))
     ) {
       // Trigger the button click
       handleSubmit();
@@ -113,7 +113,7 @@ export default function ChatRoom(props: any) {
   }, [socketRef]);
 
   const handleSubmit = async () => {
-    if (!userMessage || aiThinking || loading || tokenCount > 200) {
+    if (!userMessage || aiThinking || loading || tokenCount > 150) {
       return;
     }
     setAiThinking(true);
@@ -340,8 +340,8 @@ export default function ChatRoom(props: any) {
               variant="bordered"
               isDisabled={aiThinking || loading}
               ref={textareaRef}
-              isInvalid={tokenCount > 200 ? true : false}
-              errorMessage={tokenCount > 200 ? "Too many tokens!" : ""}
+              isInvalid={tokenCount > 150 ? true : false}
+              errorMessage={tokenCount > 150 ? "Too many tokens!" : ""}
               onKeyDown={handleKeyDown}
               value={userMessage}
               onValueChange={setUserMessage}
@@ -357,7 +357,7 @@ export default function ChatRoom(props: any) {
                   ) : (
                     <Button
                       role="button"
-                      isDisabled={aiThinking || loading || tokenCount > 200}
+                      isDisabled={aiThinking || loading || tokenCount > 150}
                       onPress={handleSubmit}
                       onSubmit={handleSubmit}
                       isIconOnly
@@ -371,7 +371,7 @@ export default function ChatRoom(props: any) {
               }
             />
           </CardFooter>
-          {tokenCount} tokens of 200
+          {tokenCount} tokens of 150
         </Card>
       </div>
     </div>

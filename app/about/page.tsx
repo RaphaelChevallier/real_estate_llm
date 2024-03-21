@@ -165,6 +165,10 @@ export default async function About() {
                   Once funds increase we plan on using more data sources for
                   cross checking.
                 </li>
+                <li>
+                  Continuously improve user experience. Send me a message to
+                  share suggestions!
+                </li>
               </ul>
             </div>
             <FiArrowDownCircle
