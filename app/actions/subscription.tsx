@@ -48,3 +48,17 @@ export async function prepareStripeCheckout(priceId: string) {
 
   return stripeSession.id;
 }
+
+export async function prepareCustomerPortal(currentPath: string) {
+  const session = await getServerSession();
+  const user = await prisma.user.findUnique({
+    where: { email: session?.user?.email ? session.user.email : "" },
+  });
+
+  const stripeSession = await stripe.billingPortal.sessions.create({
+    customer: user?.stripeId ? user.stripeId : "",
+    return_url: process.env.NEXTAUTH_URL + currentPath,
+  });
+
+  return stripeSession.url;
+}

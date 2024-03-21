@@ -1,45 +1,54 @@
 "use client";
 
-import { CircularProgress } from "@nextui-org/react";
-import { signOut, useSession } from "next-auth/react";
+import { prepareCustomerPortal } from "@/app/actions/subscription";
+import { Button, CircularProgress } from "@nextui-org/react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function ProfilePage(props: any) {
   const router = useRouter();
-  const {
-    data: session,
-    status,
-    update,
-  } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/auth/login");
-    },
-  });
+  const currentPath = usePathname();
 
-  const navigation = [
-    {
-      name:
-        session && status == "authenticated"
-          ? session.user?.firstName + " " + session.user?.lastName
-          : "",
-      href:
-        session && status == "authenticated"
-          ? "/profile/" + session.user?.firstName + session.user?.lastName
-          : "",
-    },
-    {
-      name: session && status == "authenticated" ? "Plans" : "Pricing",
-      href: "/pricing",
-    },
-    { name: "Contact Us", href: "/contactUs" },
-    { name: "Product", href: "/about" },
-    // { name: 'About Us', href: '#' },
-  ];
+  let navigation;
+  if (props.userData) {
+    if (props.userData.isSubscribed) {
+      navigation = [
+        {
+          name: props.userData.firstName + " " + props.userData.lastName,
+          href:
+            "/profile/" + props.userData.firstName + props.userData.lastName,
+        },
+        { name: "Contact Us", href: "/contactUs" },
+        { name: "Product", href: "/about" },
+        // { name: 'About Us', href: '#' },
+      ];
+    } else {
+      navigation = [
+        {
+          name: props.userData.firstName + " " + props.userData.lastName,
+          href:
+            "/profile/" + props.userData.firstName + props.userData.lastName,
+        },
+        {
+          name: "Pricing",
+          href: "/pricing",
+        },
+        { name: "Contact Us", href: "/contactUs" },
+        { name: "Product", href: "/about" },
+        // { name: 'About Us', href: '#' },
+      ];
+    }
+  }
 
-  return session && status == "authenticated" ? (
+  const loadPortal = async () => {
+    console.log(currentPath);
+    const url = await prepareCustomerPortal(currentPath);
+    router.push(url);
+  };
+
+  return props.userData ? (
     <div className="h-screen bg-[#251E1E] flex flex-col overflow-hidden">
       <div className="px-6 pt-6 lg:px-8 bg-[#251E1E] mb-8">
         <nav className="flex items-center justify-between" aria-label="Global">
@@ -56,7 +65,7 @@ export default function ProfilePage(props: any) {
             </Link>
           </div>
           <div className="hidden lg:flex lg:gap-x-12">
-            {navigation.map((item) => (
+            {navigation?.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -68,13 +77,10 @@ export default function ProfilePage(props: any) {
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <Link
-              onClick={() => {
-                signOut(), router.push("/auth/login");
-              }}
-              href="/auth/login"
+              href="/chat"
               className="text-sm font-semibold leading-6 text-gray-200 hover:scale-110"
             >
-              Sign Out <span aria-hidden="true">&rarr;</span>
+              Chat with EstateMate <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
         </nav>
@@ -83,7 +89,30 @@ export default function ProfilePage(props: any) {
       <div className="grid grid-cols-5 gap-4 px-4">
         <div className="col-start-2 text-gray-200 flex flex-col">
           <h1 className="text-4xl font-extrabold mb-10">
-            Hello {session?.user?.firstName}!
+            Hello {props.userData.firstName}!
+          </h1>
+
+          <h1 className="text-xl font-semibold mb-10">
+            Subscription Status:{""}
+            {new Date().getTime() - props.userData.createdAt.getTime() <
+              604800000 && !props.userData.isSubscribed ? (
+              <p className="text-lg font-semibold mb-10">
+                You are on the free trial.
+              </p>
+            ) : null}
+            {props.userData.isSubscribed ? (
+              <p className="text-lg font-semibold mb-10">
+                You are on the full subscription.
+              </p>
+            ) : null}
+            {!(
+              new Date().getTime() - props.userData.createdAt.getTime() <
+              604800000
+            ) && !props.userData.isSubscribed ? (
+              <p className="text-lg font-semibold mb-10">
+                No current subscription.
+              </p>
+            ) : null}
           </h1>
 
           <Link
@@ -93,12 +122,16 @@ export default function ProfilePage(props: any) {
             Reset Password
           </Link>
 
-          <Link
-            href="/pricing"
+          <Button
+            onClick={() =>
+              !props.userData.isSubscribed
+                ? router.push("/pricing")
+                : loadPortal()
+            }
             className="flex justify-center items-center mb-10 w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
           >
             Manage Subscription
-          </Link>
+          </Button>
 
           <Link
             onClick={() => signOut()}
@@ -114,13 +147,13 @@ export default function ProfilePage(props: any) {
           <h4 className="text-lg mt-10 font-semibold">
             Full Name:
             <p className="ml-2 text-white font-normal">
-              {session?.user?.firstName + " " + session?.user?.lastName}
+              {props.userData.firstName + " " + props.userData.lastName}
             </p>
           </h4>
           <h4 className="text-lg mt-10 font-semibold">
             Email:
             <p className="ml-2 text-white font-normal">
-              {session?.user?.email}
+              {props.userData.email}
             </p>
           </h4>
           <h4 className="text-lg mt-10 font-semibold">

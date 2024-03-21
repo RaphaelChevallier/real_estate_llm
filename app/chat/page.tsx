@@ -13,9 +13,9 @@ export default async function Chat() {
     new Date().getTime() - userData.createdAt.getTime() < 604800000
   ) {
     freeTrial = true;
-    return <ChatRoom freeTrial={freeTrial} />;
+    return <ChatRoom userData={userData} freeTrial={freeTrial} />;
   } else if (userData && userData.isSubscribed && userData.stripeId) {
-    return <ChatRoom freeTrial={freeTrial} />;
+    return <ChatRoom userData={userData} freeTrial={freeTrial} />;
   } else {
     revalidatePath("/pricing");
     redirect("/pricing");

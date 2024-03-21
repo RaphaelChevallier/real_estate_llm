@@ -10,7 +10,7 @@ import {
   Textarea,
 } from "@nextui-org/react";
 import { DefaultSession } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -23,6 +23,7 @@ declare module "next-auth" {
     firstName?: string | null;
     lastName?: string | null;
     freeTrial?: boolean | null;
+    isSubscribed?: boolean | null;
   }
 
   interface Session extends DefaultSession {
@@ -31,16 +32,7 @@ declare module "next-auth" {
 }
 export default function ChatRoom(props: any) {
   const router = useRouter();
-  const {
-    data: session,
-    status,
-    update,
-  } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/auth/login");
-    },
-  });
+
   const socketRef = useRef<Socket | null>(null);
   const textareaRef = useRef(null);
   const [loading, setLoading] = useState(true);
@@ -64,7 +56,7 @@ export default function ChatRoom(props: any) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: session?.user?.email,
+          email: props.userData?.email,
         }),
       });
 
@@ -75,10 +67,10 @@ export default function ChatRoom(props: any) {
       setAllMessages(mapMessages);
       setLoading(false);
     }
-    if (status != "loading" && session != null && allMessages.length == 0) {
+    if (props.userData != null && allMessages.length == 0) {
       getMessages();
     }
-  }, [session, status, allMessages.length]);
+  }, [props.userData, allMessages.length]);
 
   useEffect(() => {
     const socket = io("localhost:5001/", {
@@ -133,7 +125,7 @@ export default function ChatRoom(props: any) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: session?.user?.email,
+        email: props.userData?.email,
       }),
     });
     const data = await resInfo.json();
@@ -150,7 +142,7 @@ export default function ChatRoom(props: any) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: session?.user?.email,
+        email: props.userData?.email,
         message: userMessage,
       }),
     });
@@ -177,17 +169,15 @@ export default function ChatRoom(props: any) {
   const navigation = [
     // { name: "Pricing", href: "/pricing" },
     {
-      name:
-        session && status == "authenticated"
-          ? session.user?.firstName + " " + session.user?.lastName
-          : "Loading profile...",
-      href:
-        session && status == "authenticated"
-          ? "/profile/" + session.user?.firstName + session.user?.lastName
-          : "",
+      name: props.userData
+        ? props.userData?.firstName + " " + props.userData?.lastName
+        : "Loading profile...",
+      href: props.userData
+        ? "/profile/" + props.userData?.firstName + props.userData?.lastName
+        : "",
     },
     { name: "Contact Us", href: "/contactUs" },
-    // { name: "Product", href: "/about" },
+    { name: "Product", href: "/about" },
     // { name: 'About Us', href: '#' },
   ];
 

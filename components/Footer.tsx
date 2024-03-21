@@ -1,12 +1,6 @@
 import { CgCopyright } from "react-icons/cg";
 
 const Footer = () => {
-  //   const [nav, setNav] = useState(false);
-
-  //   const handleNav = () => {
-  //     setNav(!nav);
-  //   };
-
   const date = new Date();
   const year = date.getFullYear();
 
@@ -18,7 +12,7 @@ const Footer = () => {
             <a
               target="_blank"
               rel="noreferrer"
-              href="/Privacy-Policy-DataDiveHomes.pdf"
+              href="/Privacy_Policy_DataDiveHomes.pdf"
             >
               {" "}
               Privacy Policy
@@ -28,7 +22,7 @@ const Footer = () => {
         <div className="flex justify-center text-gray">
           <CgCopyright color="#000000" />
           <p className="text-gray-500 text-[12px]">
-            Copyright {year} - DATA DIVE HOMES | Created by Raphael Chevallier
+            Copyright {year} - DATA DIVE HOMES | All rights reserved
           </p>
         </div>
         <div className="flex justify-center text-gray">

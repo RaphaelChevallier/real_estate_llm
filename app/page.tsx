@@ -1,20 +1,48 @@
-import { getServerSession } from "next-auth";
+import { SignOut } from "@/components/SignOut";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "../components/Footer";
-
-async function getProfileData() {
-  const session = await getServerSession();
-  return session;
-}
+import { getProfileData, getUserData } from "./actions/getUserInfo";
 
 export default async function Home() {
   const session = await getProfileData();
-  const navigation = [
-    { name: "Pricing", href: "/pricing" },
-    { name: "Contact Us", href: "/contactUs" },
-    { name: "Product", href: "/about" },
-  ];
+  const user = await getUserData(session?.user?.email);
+  let navigation;
+  if (session) {
+    if (user?.isSubscribed) {
+      navigation = [
+        {
+          name: session.user?.firstName + " " + session.user?.lastName,
+          href: "/profile/" + session.user?.firstName + session.user?.lastName,
+        },
+        { name: "Contact Us", href: "/contactUs" },
+        { name: "Product", href: "/about" },
+      ];
+    } else {
+      navigation = [
+        {
+          name: session.user?.firstName + " " + session.user?.lastName,
+          href: "/profile/" + session.user?.firstName + session.user?.lastName,
+        },
+        {
+          name: "Pricing",
+          href: "/pricing",
+        },
+        { name: "Contact Us", href: "/contactUs" },
+        { name: "Product", href: "/about" },
+      ];
+    }
+  } else {
+    navigation = [
+      {
+        name: "Pricing",
+        href: "/pricing",
+      },
+      { name: "Contact Us", href: "/contactUs" },
+      { name: "Product", href: "/about" },
+    ];
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-[#251E1E] bg-center bg-no-repeat bg-[url('/aiOrb.gif')]">
       <main>
@@ -36,7 +64,7 @@ export default async function Home() {
               </Link>
             </div>
             <div className="hidden lg:flex lg:gap-x-12">
-              {navigation.map((item) => (
+              {navigation?.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
@@ -48,12 +76,15 @@ export default async function Home() {
             </div>
             <div className="hidden lg:flex lg:flex-1 lg:justify-end">
               {session && session.user?.email ? (
-                <Link
-                  href="/chat"
-                  className="text-sm font-semibold leading-6 text-gray-200 hover:scale-110"
-                >
-                  Chat with EstateMate <span aria-hidden="true">&rarr;</span>
-                </Link>
+                <div className="flex items-center justify-center space-x-4">
+                  <SignOut />
+                  <Link
+                    href="/chat"
+                    className="text-sm font-semibold leading-6 text-gray-200 hover:scale-110"
+                  >
+                    Chat with EstateMate <span aria-hidden="true">&rarr;</span>
+                  </Link>
+                </div>
               ) : (
                 <Link
                   href="/auth/login"
@@ -78,7 +109,7 @@ export default async function Home() {
             </div> */}
             <div className="text-center">
               <h1 className="text-4xl font-bold tracking-tight text-gray-200 sm:text-6xl">
-                Your personal AI real estate investing advisor
+                Your pocket AI real estate investing advisor
               </h1>
               {/* <p className="mt-6 text-lg leading-8 text-gray-600">
                 Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet

@@ -1,7 +1,7 @@
 "use server";
+import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { prisma } from "../../lib/prisma";
-import { authOptions } from '../api/auth/[...nextauth]/route';
 
 export async function getUserId(email, firstName, lastName) {
     const user = await prisma.user.findUnique({
@@ -26,6 +26,7 @@ export async function getUserData(email) {
         company: true,
         lastName: true,
         firstName: true,
+        email: true,
         role: true,
         stripeId: true,
         isSubscribed: true,

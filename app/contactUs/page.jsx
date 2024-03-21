@@ -1,24 +1,47 @@
 import Footer from "@/components/Footer";
 import { SignOut } from "@/components/SignOut";
-import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import Contact from "../../components/Contact";
-
-
-const navigation = [
-  { name: "Pricing", href: "/pricing" },
-  { name: "Product", href: "/about" },
-  // { name: 'About Us', href: '#' },
-];
-
-async function getProfileData() {
-  const session = await getServerSession();
-  return session;
-}
+import { getProfileData, getUserData } from "../actions/getUserInfo";
 
 export default async function ContactUs() {
   const session = await getProfileData()
+  const user = await getUserData(session?.user?.email)
+  let navigation;
+  if (session) {
+    if (user?.isSubscribed) {
+      navigation = [
+        {
+          name: session.user?.firstName + " " + session.user?.lastName,
+          href: "/profile/" + session.user?.firstName + session.user?.lastName,
+        },
+        { name: "Contact Us", href: "/contactUs" },
+        { name: "Product", href: "/about" },
+      ];
+    } else {
+      navigation = [
+        {
+          name: session.user?.firstName + " " + session.user?.lastName,
+          href: "/profile/" + session.user?.firstName + session.user?.lastName,
+        },
+        {
+          name: "Pricing",
+          href: "/pricing",
+        },
+        { name: "Contact Us", href: "/contactUs" },
+        { name: "Product", href: "/about" },
+      ];
+    }
+  } else {
+    navigation = [
+      {
+        name: "Pricing",
+        href: "/pricing",
+      },
+      { name: "Product", href: "/about" },
+    ];
+  }
   return (
     <div className="h-screen bg-[#251E1E] flex flex-col overflow-hidden">
       <div className="px-6 pt-6 lg:px-8 bg-[#251E1E]">

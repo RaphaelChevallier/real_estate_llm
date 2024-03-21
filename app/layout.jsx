@@ -1,7 +1,6 @@
 import { Inter } from "next/font/google";
-import AuthContext from "./authContext";
 import "./globals.css";
-import Providers from './providers';
+// import Providers from './providers';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,15 +10,15 @@ export const metadata = {
 };
 
 export default function RootLayout(
- {children, session}
+ {children}
 ) {
   return (
     <html lang="en" className="bg-[#251E1E] min-h-screen">
-      <AuthContext session={session}>
-        <Providers>
+      {/* <AuthContext session={session}> */}
+        {/* <Providers> */}
           <body className='min-h-screen'>{children}</body>
-        </Providers>
-      </AuthContext>
+        {/* </Providers> */}
+      {/* </AuthContext> */}
     </html>
   );
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "start": "next start -p 3006",
+    "start": "next start -p 3001",
     "postbuild": "next-sitemap",
     "lint": "next lint"
   },
@@ -19,6 +19,7 @@
     "bcrypt": "^5.1.1",
     "framer-motion": "^11.0.3",
     "jsonwebtoken": "^9.0.2",
+    "micro": "^10.0.1",
     "next": "14.1.0",
     "next-auth": "^4.24.5",
     "next-sitemap": "^4.2.3",
