@@ -147,19 +147,23 @@ export default function PricingPage(props: any) {
                 })}
                 {props.userData && props.userData.email ? (
                   props.userData.isSubscribed ? (
-                    <Button
-                      onPress={() => loadPortal()}
-                      className={buttonDivClassname}
-                    >
-                      Manage your subscription
-                    </Button>
+                    <div className="flex items-center justify-center">
+                      <Button
+                        onPress={() => loadPortal()}
+                        className={buttonDivClassname}
+                      >
+                        Manage your subscription
+                      </Button>
+                    </div>
                   ) : (
-                    <Button
-                      onPress={() => processSubscription(plan.id)}
-                      className={buttonDivClassname}
-                    >
-                      Get that early access!
-                    </Button>
+                    <div className="flex items-center justify-center">
+                      <Button
+                        onPress={() => processSubscription(plan.id)}
+                        className={buttonDivClassname}
+                      >
+                        Get that early access!
+                      </Button>
+                    </div>
                   )
                 ) : (
                   <Link

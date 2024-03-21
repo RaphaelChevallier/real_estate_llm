@@ -1,6 +1,6 @@
 "use client";
 import Footer from "@/components/Footer";
-import { Input } from "@nextui-org/react";
+import { CircularProgress, Input } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,9 +20,11 @@ export default function Login(props: any) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
     setError(0);
     await signIn("credentials", {
       email: email,
@@ -49,6 +51,7 @@ export default function Login(props: any) {
         setEmail("");
         setPassword("");
       }
+      setLoading(false);
     });
   };
 
@@ -145,7 +148,13 @@ export default function Login(props: any) {
               </Link>
               <div className="mt-2">
                 <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
-                  Sign In
+                  {!loading ? (
+                    "Sign In"
+                  ) : (
+                    <div className="flex items-center justify-center">
+                      <CircularProgress size="sm" />
+                    </div>
+                  )}
                 </button>
               </div>
             </form>

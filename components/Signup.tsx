@@ -1,11 +1,10 @@
 "use client";
 
 import Footer from "@/components/Footer";
-import { Input } from "@nextui-org/react";
+import { CircularProgress, Input } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const navigation = [
@@ -16,7 +15,6 @@ const navigation = [
 ];
 
 export default function Signup() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,10 +22,12 @@ export default function Signup() {
   const [lastName, setLastName] = useState("");
   const [company, setCompany] = useState("");
   const [error, setError] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
     if (password === confirmPassword && password.length > 6) {
       const res = await fetch("/api/signUp", {
         method: "POST",
@@ -75,6 +75,7 @@ export default function Signup() {
         setConfirmPasswordError(true);
       }
     }
+    setLoading(false);
   };
 
   return (
@@ -243,7 +244,13 @@ export default function Signup() {
               </div>
               <div className="mt-2">
                 <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
-                  Sign Up
+                  {!loading ? (
+                    "Sign Up"
+                  ) : (
+                    <div className="flex items-center justify-center">
+                      <CircularProgress size="sm" />
+                    </div>
+                  )}
                 </button>
               </div>
             </form>

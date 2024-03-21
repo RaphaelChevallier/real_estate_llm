@@ -85,7 +85,7 @@ export default async function ContactUs() {
               href="/auth/login"
               className="text-sm font-semibold leading-6 text-gray-200 hover:scale-110"
             >
-              Login <span aria-hidden="true">&rarr;</span>
+              Log In <span aria-hidden="true">&rarr;</span>
             </Link>
           )}
           </div>
