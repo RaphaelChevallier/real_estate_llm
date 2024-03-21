@@ -12,8 +12,8 @@ export default async function Home() {
     if (user?.isSubscribed) {
       navigation = [
         {
-          name: session.user?.firstName + " " + session.user?.lastName,
-          href: "/profile/" + session.user?.firstName + session.user?.lastName,
+          name: user?.firstName + " " + user?.lastName,
+          href: "/profile/" + user?.firstName + user?.lastName,
         },
         { name: "Contact Us", href: "/contactUs" },
         { name: "Product", href: "/about" },
@@ -21,8 +21,8 @@ export default async function Home() {
     } else {
       navigation = [
         {
-          name: session.user?.firstName + " " + session.user?.lastName,
-          href: "/profile/" + session.user?.firstName + session.user?.lastName,
+          name: user?.firstName + " " + user?.lastName,
+          href: "/profile/" + user?.firstName + user?.lastName,
         },
         {
           name: "Pricing",

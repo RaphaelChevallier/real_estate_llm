@@ -9,36 +9,21 @@ import {
   Skeleton,
   Textarea,
 } from "@nextui-org/react";
-import { DefaultSession } from "next-auth";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { Socket, io } from "socket.io-client";
 
-declare module "next-auth" {
-  interface User {
-    firstName?: string | null;
-    lastName?: string | null;
-    freeTrial?: boolean | null;
-    isSubscribed?: boolean | null;
-  }
-
-  interface Session extends DefaultSession {
-    user?: User;
-  }
-}
 export default function ChatRoom(props: any) {
-  const router = useRouter();
-
   const socketRef = useRef<Socket | null>(null);
   const textareaRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [aiThinking, setAiThinking] = useState(false);
   const bottomMessage = useRef<HTMLDivElement | null>(null);
   const [userMessage, setUserMessage] = useState("");
+  const [tokenCount, setTokenCount] = useState(0);
   const [allMessages, setAllMessages] = useState<Map<string, string>[]>([]);
 
   useEffect(() => {
@@ -88,10 +73,19 @@ export default function ChatRoom(props: any) {
     };
   }, []);
 
-  const handleKeyDown = (event: any) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+  const handleKeyDown = async (event: any) => {
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      (!aiThinking || !loading || !(tokenCount > 200))
+    ) {
       // Trigger the button click
       handleSubmit();
+    } else {
+      socketRef.current?.emit("tokenCount", {
+        userMessage: userMessage,
+        userId: props.userData?.id,
+      });
     }
   };
 
@@ -112,13 +106,18 @@ export default function ChatRoom(props: any) {
       setAllMessages((allMessages) => [...allMessages, chatMap]);
       setAiThinking(false);
     });
+
+    socketRef.current?.on("tokenCount", (data: string) => {
+      setTokenCount(parseInt(data));
+    });
   }, [socketRef]);
 
   const handleSubmit = async () => {
-    if (!userMessage) {
+    if (!userMessage || aiThinking || loading || tokenCount > 200) {
       return;
     }
     setAiThinking(true);
+    setTokenCount(0);
     const resInfo = await fetch("/api/getUserInfo", {
       method: "POST",
       headers: {
@@ -341,6 +340,8 @@ export default function ChatRoom(props: any) {
               variant="bordered"
               isDisabled={aiThinking || loading}
               ref={textareaRef}
+              isInvalid={tokenCount > 200 ? true : false}
+              errorMessage={tokenCount > 200 ? "Too many tokens!" : ""}
               onKeyDown={handleKeyDown}
               value={userMessage}
               onValueChange={setUserMessage}
@@ -356,7 +357,7 @@ export default function ChatRoom(props: any) {
                   ) : (
                     <Button
                       role="button"
-                      isDisabled={aiThinking || loading}
+                      isDisabled={aiThinking || loading || tokenCount > 200}
                       onPress={handleSubmit}
                       onSubmit={handleSubmit}
                       isIconOnly
@@ -370,6 +371,7 @@ export default function ChatRoom(props: any) {
               }
             />
           </CardFooter>
+          {tokenCount} tokens of 200
         </Card>
       </div>
     </div>
