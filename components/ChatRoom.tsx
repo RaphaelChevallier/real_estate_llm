@@ -14,7 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
-import { Socket, io } from "socket.io-client";
+import { Socket } from "socket.io-client";
 
 export default function ChatRoom(props: any) {
   const socketRef = useRef<Socket | null>(null);
@@ -57,21 +57,36 @@ export default function ChatRoom(props: any) {
     }
   }, [props.userData, allMessages.length]);
 
-  useEffect(() => {
-    const socket = io("localhost:5001/", {
-      transports: ["websocket"],
-    });
+  // useEffect(() => {
+  //   const socket = io("https://datadivehomes.com/", {
+  //     transports: ["websocket"],
+  //   });
 
-    socketRef.current = socket;
+  //   socketRef.current = socket;
 
-    socket.on("connect", () => {});
+  //   socket.on("connect", () => {})
+    // socket.on("connect", () => {
+    //   console.log("Connected to Socket.IO server");
+    //   const transport = socket.io.engine.transport.name;
+    //   // in most cases, "polling"
+    //   socket.io.engine.on("upgrade", () => {
+    //     const upgradedTransport = socket.io.engine.transport.name;
+    //     // in most cases, "websocket"
+    //   });
+    // });
+    
+    // socket.on("error", (error) => {
+    //   console.log("here")
+    //   console.error(error)
+    //   console.error("Socket.IO connection error:", error);
+    // })
 
-    socket.on("disconnect", () => {});
+  //   socket.on("disconnect", () => {});
 
-    return function cleanup() {
-      socket.disconnect();
-    };
-  }, []);
+  //   return function cleanup() {
+  //     socket.disconnect();
+  //   };
+  // }, []);
 
   const handleKeyDown = async (event: any) => {
     if (
