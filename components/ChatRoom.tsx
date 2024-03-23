@@ -58,37 +58,6 @@ export default function ChatRoom(props: any) {
     }
   }, [props.userData, allMessages.length]);
 
-  // useEffect(() => {
-  //   const socket = io("https://datadivehomes.com/", {
-  //     transports: ["websocket"],
-  //   });
-
-  //   socketRef.current = socket;
-
-  //   socket.on("connect", () => {})
-  // socket.on("connect", () => {
-  //   console.log("Connected to Socket.IO server");
-  //   const transport = socket.io.engine.transport.name;
-  //   // in most cases, "polling"
-  //   socket.io.engine.on("upgrade", () => {
-  //     const upgradedTransport = socket.io.engine.transport.name;
-  //     // in most cases, "websocket"
-  //   });
-  // });
-
-  // socket.on("error", (error) => {
-  //   console.log("here")
-  //   console.error(error)
-  //   console.error("Socket.IO connection error:", error);
-  // })
-
-  //   socket.on("disconnect", () => {});
-
-  //   return function cleanup() {
-  //     socket.disconnect();
-  //   };
-  // }, []);
-
   const handleKeyDown = async (event: any) => {
     if (
       event.key === "Enter" &&
@@ -111,29 +80,6 @@ export default function ChatRoom(props: any) {
     }
     getTokens();
   }, [userMessage]);
-
-  // useEffect(() => {
-  //   socketRef.current?.on("data", (data: string) => {
-  //     let chatMap = new Map<string, string>();
-  //     chatMap.set("from", "ai");
-  //     chatMap.set("message", data);
-  //     fetch("/api/messages/saveAiMessage", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         message: data,
-  //       }),
-  //     });
-  //     setAllMessages((allMessages) => [...allMessages, chatMap]);
-  //     setAiThinking(false);
-  //   });
-
-  //   socketRef.current?.on("tokenCount", (data: string) => {
-  //     setTokenCount(parseInt(data));
-  //   });
-  // }, [socketRef]);
 
   const handleSubmit = async () => {
     if (!userMessage || aiThinking || loading || tokenCount > 150) {
@@ -182,6 +128,11 @@ export default function ChatRoom(props: any) {
           /\*\*(.*?)\*\*/g,
           '<header class="text-xl font-bold">$1</header><p>'
         )
+        // Apply the same rule to text within # symbols
+        .replace(
+          /\#\#(.*?)\#\#/g,
+          '<header class="text-xl font-bold">$1</header><p>'
+        )
         .replace(/\*(.*?)\*/g, '<p class="font-semibold">$1</p>')
         .replace(/^(?=[^\s])/gm, "<p>") // Wrap remaining paragraphs
         .trim(); // Tidy up extra whitespace
@@ -192,7 +143,6 @@ export default function ChatRoom(props: any) {
   }
 
   const navigation = [
-    // { name: "Pricing", href: "/pricing" },
     {
       name: props.userData
         ? props.userData?.firstName + " " + props.userData?.lastName
@@ -203,7 +153,6 @@ export default function ChatRoom(props: any) {
     },
     { name: "Contact Us", href: "/contactUs" },
     { name: "Product", href: "/about" },
-    // { name: 'About Us', href: '#' },
   ];
 
   return (
