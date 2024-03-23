@@ -108,6 +108,8 @@ export default function ChatRoom(props: any) {
     chatMap = new Map<string, string>();
     chatMap.set("from", "ai");
     chatMap.set("message", aiResponse);
+    setAllMessages((allMessages) => [...allMessages, chatMap]);
+    setAiThinking(false);
     fetch("/api/messages/saveAiMessage", {
       method: "POST",
       headers: {
@@ -117,8 +119,6 @@ export default function ChatRoom(props: any) {
         message: aiResponse,
       }),
     });
-    setAllMessages((allMessages) => [...allMessages, chatMap]);
-    setAiThinking(false);
   };
 
   function formatTextWithTailwind(text: string | undefined) {
