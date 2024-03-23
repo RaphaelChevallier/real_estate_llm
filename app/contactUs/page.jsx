@@ -12,25 +12,26 @@ export default async function ContactUs() {
   if (session) {
     if (user?.isSubscribed) {
       navigation = [
+        { name: "Contact Us", href: "/contactUs" },
+        { name: "Product", href: "/about" },
         {
           name: session.user?.firstName + " " + session.user?.lastName,
           href: "/profile/" + session.user?.firstName + session.user?.lastName,
         },
-        { name: "Contact Us", href: "/contactUs" },
-        { name: "Product", href: "/about" },
       ];
     } else {
       navigation = [
-        {
-          name: session.user?.firstName + " " + session.user?.lastName,
-          href: "/profile/" + session.user?.firstName + session.user?.lastName,
-        },
+        
         {
           name: "Pricing",
           href: "/pricing",
         },
         { name: "Contact Us", href: "/contactUs" },
         { name: "Product", href: "/about" },
+        {
+          name: session.user?.firstName + " " + session.user?.lastName,
+          href: "/profile/" + session.user?.firstName + session.user?.lastName,
+        },
       ];
     }
   } else {

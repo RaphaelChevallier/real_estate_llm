@@ -11,25 +11,25 @@ export default async function Home() {
   if (session) {
     if (user?.isSubscribed) {
       navigation = [
+        { name: "Contact Us", href: "/contactUs" },
+        { name: "Product", href: "/about" },
         {
           name: user?.firstName + " " + user?.lastName,
           href: "/profile/" + user?.firstName + user?.lastName,
         },
-        { name: "Contact Us", href: "/contactUs" },
-        { name: "Product", href: "/about" },
       ];
     } else {
       navigation = [
-        {
-          name: user?.firstName + " " + user?.lastName,
-          href: "/profile/" + user?.firstName + user?.lastName,
-        },
         {
           name: "Pricing",
           href: "/pricing",
         },
         { name: "Contact Us", href: "/contactUs" },
         { name: "Product", href: "/about" },
+        {
+          name: user?.firstName + " " + user?.lastName,
+          href: "/profile/" + user?.firstName + user?.lastName,
+        },
       ];
     }
   } else {

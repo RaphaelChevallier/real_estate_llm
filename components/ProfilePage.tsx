@@ -15,14 +15,8 @@ export default function ProfilePage(props: any) {
   if (props.userData) {
     if (props.userData.isSubscribed) {
       navigation = [
-        {
-          name: props.userData.firstName + " " + props.userData.lastName,
-          href:
-            "/profile/" + props.userData.firstName + props.userData.lastName,
-        },
         { name: "Contact Us", href: "/contactUs" },
         { name: "Product", href: "/about" },
-        // { name: 'About Us', href: '#' },
       ];
     } else {
       navigation = [
@@ -37,7 +31,6 @@ export default function ProfilePage(props: any) {
         },
         { name: "Contact Us", href: "/contactUs" },
         { name: "Product", href: "/about" },
-        // { name: 'About Us', href: '#' },
       ];
     }
   }

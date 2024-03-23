@@ -13,23 +13,23 @@ export default async function About() {
   if (session) {
     if (userData?.isSubscribed) {
       navigation = [
+        { name: "Contact Us", href: "/contactUs" },
         {
           name: userData?.firstName + " " + userData?.lastName,
           href: "/profile/" + userData?.firstName + userData?.lastName,
         },
-        { name: "Contact Us", href: "/contactUs" },
       ];
     } else {
       navigation = [
-        {
-          name: userData?.firstName + " " + userData?.lastName,
-          href: "/profile/" + userData?.firstName + userData?.lastName,
-        },
         {
           name: "Pricing",
           href: "/pricing",
         },
         { name: "Contact Us", href: "/contactUs" },
+        {
+          name: userData?.firstName + " " + userData?.lastName,
+          href: "/profile/" + userData?.firstName + userData?.lastName,
+        },
       ];
     }
   } else {
