@@ -148,7 +148,7 @@ export default function ChatRoom(props: any) {
             acc.replace(pattern, replacement as string),
           text
         )
-        .replace(/\n/g, "<br />\n") // Insert <br> for newlines
+        // .replace(/\n/g, "<br />\n") // Insert <br> for newlines
         .replace(/^(?=[^\s])/gm, "<p>") // Wrap paragraphs
         .trim(); // Tidy up whitespace
 
