@@ -21,11 +21,6 @@ export default function ProfilePage(props: any) {
     } else {
       navigation = [
         {
-          name: props.userData.firstName + " " + props.userData.lastName,
-          href:
-            "/profile/" + props.userData.firstName + props.userData.lastName,
-        },
-        {
           name: "Pricing",
           href: "/pricing",
         },

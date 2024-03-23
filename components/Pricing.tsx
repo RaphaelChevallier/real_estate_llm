@@ -20,12 +20,12 @@ export default function PricingPage(props: any) {
   let navigation;
   if (props.userData) {
     navigation = [
+      { name: "Contact Us", href: "/contactUs" },
+      { name: "Product", href: "/about" },
       {
         name: props.userData.firstName + " " + props.userData.lastName,
         href: "/profile/" + props.userData.firstName + props.userData.lastName,
       },
-      { name: "Contact Us", href: "/contactUs" },
-      { name: "Product", href: "/about" },
     ];
   } else {
     navigation = [
