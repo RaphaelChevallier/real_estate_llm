@@ -14,7 +14,7 @@ const navigation = [
   // { name: 'About Us', href: '#' },
 ];
 
-export default function Signup() {
+export default function Signup(props: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -52,6 +52,7 @@ export default function Signup() {
           redirect: true,
           callbackUrl: "/chat",
         });
+        props.refreshRoutes();
       } else if (data.status === 409) {
         setConfirmPasswordError(false);
         setError(data.status);

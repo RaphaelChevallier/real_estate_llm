@@ -33,6 +33,7 @@ export default function Login(props: any) {
     }).then((response) => {
       if (response?.status === 200) {
         router.push("/chat");
+        props.refreshRoutes();
       } else if (response?.status === 401) {
         if (response.error) {
           console.log(response);
