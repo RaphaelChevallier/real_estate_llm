@@ -1,5 +1,6 @@
 "use client";
 
+import { getTokenCount, llmResponse } from "@/app/actions/llmServer";
 import {
   Button,
   Card,
@@ -65,21 +66,21 @@ export default function ChatRoom(props: any) {
   //   socketRef.current = socket;
 
   //   socket.on("connect", () => {})
-    // socket.on("connect", () => {
-    //   console.log("Connected to Socket.IO server");
-    //   const transport = socket.io.engine.transport.name;
-    //   // in most cases, "polling"
-    //   socket.io.engine.on("upgrade", () => {
-    //     const upgradedTransport = socket.io.engine.transport.name;
-    //     // in most cases, "websocket"
-    //   });
-    // });
-    
-    // socket.on("error", (error) => {
-    //   console.log("here")
-    //   console.error(error)
-    //   console.error("Socket.IO connection error:", error);
-    // })
+  // socket.on("connect", () => {
+  //   console.log("Connected to Socket.IO server");
+  //   const transport = socket.io.engine.transport.name;
+  //   // in most cases, "polling"
+  //   socket.io.engine.on("upgrade", () => {
+  //     const upgradedTransport = socket.io.engine.transport.name;
+  //     // in most cases, "websocket"
+  //   });
+  // });
+
+  // socket.on("error", (error) => {
+  //   console.log("here")
+  //   console.error(error)
+  //   console.error("Socket.IO connection error:", error);
+  // })
 
   //   socket.on("disconnect", () => {});
 
@@ -96,36 +97,43 @@ export default function ChatRoom(props: any) {
     ) {
       // Trigger the button click
       handleSubmit();
-    } else {
-      socketRef.current?.emit("tokenCount", {
-        userMessage: userMessage,
-        userId: props.userData?.id,
-      });
     }
   };
 
   useEffect(() => {
-    socketRef.current?.on("data", (data: string) => {
-      let chatMap = new Map<string, string>();
-      chatMap.set("from", "ai");
-      chatMap.set("message", data);
-      fetch("/api/messages/saveAiMessage", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: data,
-        }),
-      });
-      setAllMessages((allMessages) => [...allMessages, chatMap]);
-      setAiThinking(false);
-    });
+    async function getTokens() {
+      if (userMessage.length == 0 || userMessage == "") {
+        setTokenCount(0);
+      } else {
+        const tokenCount = await getTokenCount(userMessage);
+        setTokenCount(tokenCount.total_tokens);
+      }
+    }
+    getTokens();
+  }, [userMessage]);
 
-    socketRef.current?.on("tokenCount", (data: string) => {
-      setTokenCount(parseInt(data));
-    });
-  }, [socketRef]);
+  // useEffect(() => {
+  //   socketRef.current?.on("data", (data: string) => {
+  //     let chatMap = new Map<string, string>();
+  //     chatMap.set("from", "ai");
+  //     chatMap.set("message", data);
+  //     fetch("/api/messages/saveAiMessage", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         message: data,
+  //       }),
+  //     });
+  //     setAllMessages((allMessages) => [...allMessages, chatMap]);
+  //     setAiThinking(false);
+  //   });
+
+  //   socketRef.current?.on("tokenCount", (data: string) => {
+  //     setTokenCount(parseInt(data));
+  //   });
+  // }, [socketRef]);
 
   const handleSubmit = async () => {
     if (!userMessage || aiThinking || loading || tokenCount > 150) {
@@ -133,23 +141,11 @@ export default function ChatRoom(props: any) {
     }
     setAiThinking(true);
     setTokenCount(0);
-    const resInfo = await fetch("/api/getUserInfo", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: props.userData?.email,
-      }),
-    });
-    const data = await resInfo.json();
-    socketRef.current?.emit("data", {
-      userMessage: userMessage,
-      userId: data.id,
-    });
     let chatMap = new Map<string, string>();
     chatMap.set("from", "user");
     chatMap.set("message", userMessage);
+    setAllMessages([...allMessages, chatMap]);
+    setUserMessage("");
     fetch("/api/messages/saveUserMessage", {
       method: "POST",
       headers: {
@@ -160,8 +156,23 @@ export default function ChatRoom(props: any) {
         message: userMessage,
       }),
     });
-    setAllMessages([...allMessages, chatMap]);
-    setUserMessage("");
+    const data = await llmResponse(userMessage);
+    const aiResponse = data.llmResponse;
+
+    chatMap = new Map<string, string>();
+    chatMap.set("from", "ai");
+    chatMap.set("message", aiResponse);
+    fetch("/api/messages/saveAiMessage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: data,
+      }),
+    });
+    setAllMessages((allMessages) => [...allMessages, chatMap]);
+    setAiThinking(false);
   };
 
   function formatTextWithTailwind(text: string | undefined) {
