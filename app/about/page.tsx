@@ -132,7 +132,7 @@ export default async function About() {
                 at hand.
               </p>
               <p>
-                * Create an account today and get a 7 day free trial. No credit
+                * Create an account today and get a 3 day free trial. No credit
                 card needed!
               </p>
             </div>

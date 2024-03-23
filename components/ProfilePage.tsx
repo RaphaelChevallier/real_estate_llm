@@ -95,7 +95,7 @@ export default function ProfilePage(props: any) {
           <h1 className="text-xl font-semibold mb-10">
             Subscription Status:{""}
             {new Date().getTime() - props.userData.createdAt.getTime() <
-              604800000 && !props.userData.isSubscribed ? (
+              259200000 && !props.userData.isSubscribed ? (
               <p className="text-lg font-semibold mb-10">
                 You are on the free trial.
               </p>
@@ -107,7 +107,7 @@ export default function ProfilePage(props: any) {
             ) : null}
             {!(
               new Date().getTime() - props.userData.createdAt.getTime() <
-              604800000
+              259200000
             ) && !props.userData.isSubscribed ? (
               <p className="text-lg font-semibold mb-10">
                 No current subscription.

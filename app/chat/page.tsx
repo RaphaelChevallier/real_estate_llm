@@ -10,7 +10,7 @@ export default async function Chat() {
   let freeTrial = false;
   if (
     userData &&
-    new Date().getTime() - userData.createdAt.getTime() < 604800000
+    new Date().getTime() - userData.createdAt.getTime() < 259200000
   ) {
     freeTrial = true;
     return <ChatRoom userData={userData} freeTrial={freeTrial} />;

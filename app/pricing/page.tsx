@@ -44,7 +44,7 @@ export default async function Pricing() {
     );
   } else if (
     userData &&
-    new Date().getTime() - userData.createdAt.getTime() < 604800000
+    new Date().getTime() - userData.createdAt.getTime() < 259200000
   ) {
     const currentPlan = "freeTrial";
     const days = new Date().getTime() - userData.createdAt.getTime();
