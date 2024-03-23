@@ -28,7 +28,7 @@ export async function llmResponse(userMessage: string) {
   const tokenCount = await getTokenCount(userMessage);
   const session = await getServerSession();
   const userId = await getUserId(session?.user?.email);
-  if (session && userId?.id && tokenCount <= 100) {
+  if (session && userId?.id && tokenCount.total_tokens <= 100) {
     const response = await fetch(
       "http://localhost:5001/llm_server/getLLMResponse",
       {
@@ -44,6 +44,10 @@ export async function llmResponse(userMessage: string) {
     );
 
     return await response.json();
-  }
-  return;
+  } else if(tokenCount.total_tokens > 100){
+    return {llmResponse: "You have too many tokens in the query. Please write a shorter query."}
+  } else if (!session || !userId?.id){
+    return {llmResponse: "You are not authorized to be querying this at the moment."}
+  } 
+  return {llmResponse: "Something went wrong. Please try again later. Contact us if the problem persists"};
 }
