@@ -25,9 +25,10 @@ export async function getTokenCount(userMessage: string) {
 }
 
 export async function llmResponse(userMessage: string) {
+  const tokenCount = await getTokenCount(userMessage);
   const session = await getServerSession();
   const userId = await getUserId(session?.user?.email);
-  if (session && userId?.id) {
+  if (session && userId?.id && tokenCount <= 100) {
     const response = await fetch(
       "http://localhost:5001/llm_server/getLLMResponse",
       {
