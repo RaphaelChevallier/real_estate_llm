@@ -2,13 +2,13 @@
 
 import { getTokenCount, llmResponse } from "@/app/actions/llmServer";
 import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CircularProgress,
-  Skeleton,
-  Textarea,
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    CircularProgress,
+    Skeleton,
+    Textarea,
 } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -52,7 +52,7 @@ export default function ChatRoom(props: any) {
       EstateMate. I&apos;m an expert in real estate and \
       I help brokers and investors identify the rare find in home properties \
       to invest in and maximize profit. I can help you talk to the data directly…\
-      \n  \n *Some examples to get started in your real estate journey:* \n \
+      \n  \n *Some examples you can type to get started in your real estate journey:* \n \
       *Example 1:* \
       Could you summarize for me the pros and cons of this property at 11903 NE 128TH ST UNIT 5, in KIRKLAND in the state of Washington? \
       \n \n*Example 2:* \
