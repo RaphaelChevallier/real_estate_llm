@@ -2,13 +2,13 @@
 
 import { getTokenCount, llmResponse } from "@/app/actions/llmServer";
 import {
-    Button,
-    Card,
-    CardBody,
-    CardFooter,
-    CircularProgress,
-    Skeleton,
-    Textarea,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CircularProgress,
+  Skeleton,
+  Textarea,
 } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -156,36 +156,8 @@ export default function ChatRoom(props: any) {
     }
     return null;
   }
-  // function formatTextWithTailwind(text: string | undefined) {
-  //   if (text) {
-  //     const formattedText = text
-  //       .replace(
-  //         /\*\*(.*?)\*\*/g,
-  //         '<header class="text-md font-bold">$1</header><p>'
-  //       )
-  //       // Apply the same rule to text within # symbols
-  //       .replace(
-  //         /\#\#(.*?)\#\#/g,
-  //         '<header class="text-md font-bold">$1</header><p>'
-  //       )
-  //       .replace(/\*(.*?)\*/g, '<p class="font-semibold">$1</p>')
-  //       .replace(/^(?=[^\s])/gm, "<p>") // Wrap remaining paragraphs
-  //       .trim(); // Tidy up extra whitespace
-
-  //     // Function now returns JSX using dangerouslySetInnerHTML
-  //     return <div dangerouslySetInnerHTML={{ __html: formattedText }} />;
-  //   }
-  // }
 
   const navigation = [
-    // {
-    //   name: props.userData
-    //     ? props.userData?.firstName + " " + props.userData?.lastName
-    //     : "Loading profile...",
-    //   href: props.userData
-    //     ? "/profile/" + props.userData?.firstName + props.userData?.lastName
-    //     : "",
-    // },
     { name: "Contact Us", href: "/contactUs" },
     { name: "Product", href: "/about" },
   ];
@@ -256,8 +228,9 @@ export default function ChatRoom(props: any) {
                         className="col-start-1 col-end-8 p-3 rounded-lg"
                       >
                         <div className="flex flex-row items-center">
-                          <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                            RC
+                          <div className="flex items-center justify-center font-bold h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+                            {props.userData.firstName.charAt(0) +
+                              props.userData.lastName.charAt(0)}
                           </div>
                           <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
                             <div>{item.get("message")}</div>
