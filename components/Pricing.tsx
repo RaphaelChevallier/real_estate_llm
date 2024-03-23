@@ -109,7 +109,7 @@ export default function PricingPage(props: any) {
       {props.currentPlan == "freeTrial" && !props.userData.isSubscribed ? (
         <h1 className="flex items-center justify-center mt-10 text-gray-200 font-semibold text-lg text-red-600">
           You are currently on the free trial! On day{" "}
-          {Math.ceil(props.days / 1000 / 86400)} of 7.
+          {Math.ceil(props.days / 1000 / 86400)} of 3.
         </h1>
       ) : null}
       <div className="flex-col flex h-screen items-center justify-center overflow-hidden grid grid-cols-6 gap-2">
