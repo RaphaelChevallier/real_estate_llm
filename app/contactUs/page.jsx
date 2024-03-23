@@ -12,7 +12,6 @@ export default async function ContactUs() {
   if (session) {
     if (user?.isSubscribed) {
       navigation = [
-        { name: "Contact Us", href: "/contactUs" },
         { name: "Product", href: "/about" },
         {
           name: session.user?.firstName + " " + session.user?.lastName,
@@ -26,7 +25,6 @@ export default async function ContactUs() {
           name: "Pricing",
           href: "/pricing",
         },
-        { name: "Contact Us", href: "/contactUs" },
         { name: "Product", href: "/about" },
         {
           name: session.user?.firstName + " " + session.user?.lastName,
