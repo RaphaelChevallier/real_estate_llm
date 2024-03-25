@@ -60,7 +60,7 @@ export default function ChatRoom(props: any) {
       \n \n*Example 3:* \
       What is subject-to financing? \
       *Example 4:* \
-      Would seller financing be a good option for 11903 NE 128TH ST UNIT 5, in KIRKLAND in the state of Washington?"
+      Would subject-to financing be a good option for 201 Galer St unit 104 in Seattle?"
       );
       const allMessages = await res.json();
       const mapMessages = allMessages.data.map((obj: any) => {
