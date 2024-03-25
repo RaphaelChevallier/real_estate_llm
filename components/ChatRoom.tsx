@@ -58,7 +58,7 @@ export default function ChatRoom(props: any) {
       \n \n*Example 2:* \
       Give me the average property value for homes in 98034? \
       \n \n*Example 3:* \
-      What is subject-to financing? \
+      what is seller financing vs subject to financing? \
       *Example 4:* \
       Would subject-to financing be a good option for 201 Galer St unit 104 in Seattle?"
       );
