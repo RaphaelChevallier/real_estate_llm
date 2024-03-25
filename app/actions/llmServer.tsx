@@ -43,11 +43,27 @@ export async function llmResponse(userMessage: string) {
       }
     );
 
-    return await response.json();
-  } else if(tokenCount.total_tokens > 100){
-    return {llmResponse: "You have too many tokens in the query. Please write a shorter query."}
-  } else if (!session || !userId?.id){
-    return {llmResponse: "You are not authorized to be querying me at the moment."}
-  } 
-  return {llmResponse: "**Something went wrong.** Please try again later. Contact us if the problem persists."};
+    const res = await response.json();
+    if (res.status == 500) {
+      return {
+        llmResponse:
+          "**Something went wrong.** Please try again later. Contact us if the problem persists.",
+      };
+    } else {
+      return res;
+    }
+  } else if (tokenCount.total_tokens > 100) {
+    return {
+      llmResponse:
+        "You have too many tokens in the query. Please write a shorter query.",
+    };
+  } else if (!session || !userId?.id) {
+    return {
+      llmResponse: "You are not authorized to be querying me at the moment.",
+    };
+  }
+  return {
+    llmResponse:
+      "**Something went wrong.** Please try again later. Contact us if the problem persists.",
+  };
 }

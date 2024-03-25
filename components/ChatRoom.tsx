@@ -56,7 +56,11 @@ export default function ChatRoom(props: any) {
       *Example 1:* \
       Could you summarize for me the pros and cons of this property at 11903 NE 128TH ST UNIT 5, in KIRKLAND in the state of Washington? \
       \n \n*Example 2:* \
-      Give me the average property value for homes in 98034?"
+      Give me the average property value for homes in 98034? \
+      \n \n*Example 3:* \
+      What is subject-to financing? \
+      *Example 4:* \
+      Would seller financing be a good option for 11903 NE 128TH ST UNIT 5, in KIRKLAND in the state of Washington?"
       );
       const allMessages = await res.json();
       const mapMessages = allMessages.data.map((obj: any) => {
